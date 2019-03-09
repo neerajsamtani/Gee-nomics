@@ -21,6 +21,13 @@ void testGenome()
 	assert(GenomeEmpty.name() == "" && GenomeEmpty.length() == 0);
 
 	// extract()
+	// Provided Tests
+	Genome g("oryx",
+		"GCTCGGNACACATCCGCCGCGGACGGGACGGGATTCGGGCTGTCGATTGTCTCACAGATCGTCGACGTACATGACTGGGA");	string	f1, f2, f3;
+	assert(g.extract(0, 5, f1) && f1 == "GCTCG");	 //	result1	=	true,	f1	=	“GCTCG”;
+	assert(g.extract(74, 6, f2) && f2 == "CTGGGA"); //	result2 =	true,	f2 =	“CTGGGA”;
+	assert(!g.extract(74, 7, f3)); //	result3 =	false,	f3 is	unchanged
+	// Written unit tests
 	string fragment;
 	// extract from start
 	assert(GenomeOne.extract(0, 0, fragment) && fragment.length() == 0);
