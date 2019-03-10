@@ -1,9 +1,12 @@
 #include "provided.h"
+#include "Trie.h"
 #include <string>
 #include <vector>
 #include <iostream>
 #include <fstream>
 using namespace std;
+
+// TODO: Destructor to destroy Trie
 
 class GenomeMatcherImpl
 {
@@ -14,21 +17,37 @@ public:
     bool findGenomesWithThisDNA(const string& fragment, int minimumLength, bool exactMatchOnly, vector<DNAMatch>& matches) const;
     bool findRelatedGenomes(const Genome& query, int fragmentMatchLength, bool exactMatchOnly, double matchPercentThreshold, vector<GenomeMatch>& results) const;
 private:
+	struct matchPosition
+	{
+		int m_genomeNumber;
+		int m_position;
+	};
+	int m_minSearchLength;
+	vector<Genome> m_genomes;
+	Trie<matchPosition> m_genomeTrie;
 };
 
 GenomeMatcherImpl::GenomeMatcherImpl(int minSearchLength)
-{
-    // This compiles, but may not be correct
-}
+	:m_minSearchLength(minSearchLength)
+{}
 
 void GenomeMatcherImpl::addGenome(const Genome& genome)
 {
-    // This compiles, but may not be correct
+	m_genomes.push_back(genome);
+	string fragment;
+	for (int i = 0; genome.extract(i, m_minSearchLength, fragment); i++)
+	{
+		matchPosition matchPos;
+		matchPos.m_genomeNumber = m_genomes.size();
+		matchPos.m_position = i;
+		m_genomeTrie.insert(fragment, matchPos);
+		cout << "Genome " << matchPos.m_genomeNumber << " Position " << matchPos.m_position << endl;
+	}
 }
 
 int GenomeMatcherImpl::minimumSearchLength() const
 {
-    return 0;  // This compiles, but may not be correct
+	return m_minSearchLength;
 }
 
 bool GenomeMatcherImpl::findGenomesWithThisDNA(const string& fragment, int minimumLength, bool exactMatchOnly, vector<DNAMatch>& matches) const

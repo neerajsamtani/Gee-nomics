@@ -154,9 +154,27 @@ void testTrie()
 
 }
 
+void testGenomeMatcher()
+{
+	// create a break in CMD
+	cout << endl << "####################################" << endl;
+
+	// create Genomes
+	Genome GenomeOne("Genome 1", "ACTG");
+	Genome GenomeTwo("Genome 2", "TCGACT");
+	Genome GenomeThree("Genome 3", "TCTCG");
+
+	// constructor
+	GenomeMatcher GenomeMatcherOne(3);
+	GenomeMatcherOne.addGenome(GenomeOne);
+	GenomeMatcherOne.addGenome(GenomeTwo);
+	GenomeMatcherOne.addGenome(GenomeThree);
+}
+
 int main()
 {
 	testGenome();
 	testTrie();
+	testGenomeMatcher();
 	cout << "Passed all tests" << endl;
 }

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
-// TODO: remove iostream
+// TODO: remove iostream and print
 using namespace std;
 
 
@@ -57,7 +57,7 @@ inline void Trie<ValueType>::print(Node* currentNode)
 	cout << "Values :";
 	for (typename vector<ValueType>::iterator p = currentNode->m_values.begin();
 		p != currentNode->m_values.end(); p++)
-		cout << *p << " ";
+		cout << "val" << " "; // TODO: Print properly // cout << (*p) << " ";
 	cout << endl << "Children: ";
 	for (typename vector<ChildPtr>::iterator p = currentNode->m_children.begin();
 		p != currentNode->m_children.end(); p++)
