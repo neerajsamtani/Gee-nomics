@@ -151,6 +151,9 @@ void testTrie()
 	text = "a";
 	result = trie.find(text, false);
 	assert(result[0] == 14 && result.size() == 1);
+	text = "h";
+	result = trie.find(text, false);
+	assert(result.size() == 0);
 
 }
 
@@ -160,15 +163,33 @@ void testGenomeMatcher()
 	cout << endl << "####################################" << endl;
 
 	// create Genomes
-	Genome GenomeOne("Genome 1", "ACTG");
-	Genome GenomeTwo("Genome 2", "TCGACT");
-	Genome GenomeThree("Genome 3", "TCTCG");
+	Genome GenomeOne("Genome 1", "CGGTGTACNACGACTGGGGATAGAATATCTTGACGTCGTACCGGTTGTAGTCGTTCGACCGAAGGGTTCCGCGCCAGTAC");
+	Genome GenomeTwo("Genome 2", "TAACAGAGCGGTNATATTGTTACGAATCACGTGCGAGACTTAGAGCCAGAATATGAAGTAGTGATTCAGCAACCAAGCGG");
+	Genome GenomeThree("Genome 3", "TTTTGAGCCAGCGACGCGGCTTGCTTAACGAAGCGGAAGAGTAGGTTGGACACATTNGGCGGCACAGCGCTTTTGAGCCA");
 
 	// constructor
-	GenomeMatcher GenomeMatcherOne(3);
+	GenomeMatcher GenomeMatcherOne(4);
 	GenomeMatcherOne.addGenome(GenomeOne);
 	GenomeMatcherOne.addGenome(GenomeTwo);
 	GenomeMatcherOne.addGenome(GenomeThree);
+	
+	
+	// findGenomesWithThisDNA()
+	vector<DNAMatch> matches;
+	bool result;
+	result = GenomeMatcherOne.findGenomesWithThisDNA("GAAG", 4, true, matches);
+	assert(result && matches[0].genomeName == "Genome 1" && matches[0].length == 4 && matches[0].position == 60);
+	assert(result && matches[1].genomeName == "Genome 2" && matches[1].length == 4 && matches[1].position == 54);
+	assert(result && matches[2].genomeName == "Genome 3" && matches[2].length == 4 && matches[2].position == 29);
+
+	result	= GenomeMatcherOne.findGenomesWithThisDNA("GAATAC",	4,	true,	matches);
+	assert(result && matches[0].genomeName == "Genome 1" && matches[0].length == 5 && matches[0].position == 22);
+	assert(result && matches[1].genomeName == "Genome 2" && matches[1].length == 5 && matches[1].position == 48);
+
+	result = GenomeMatcherOne.findGenomesWithThisDNA("GAATAC", 6, true, matches);
+	assert(!result);
+
+	
 }
 
 int main()

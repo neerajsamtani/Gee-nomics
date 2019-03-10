@@ -53,7 +53,29 @@ int GenomeMatcherImpl::minimumSearchLength() const
 
 bool GenomeMatcherImpl::findGenomesWithThisDNA(const string& fragment, int minimumLength, bool exactMatchOnly, vector<DNAMatch>& matches) const
 {
-    return false;  // This compiles, but may not be correct
+	// Return false if
+	// fragment's length is less than minimumLength, or
+	// minimumLength is less than the m_minSearchLength
+	if (fragment.length() < minimumLength ||
+		minimumLength < m_minSearchLength)
+		return false;
+
+	// Attempt to find matches of length m_minSearchLength in the GenomeMatcher Trie
+	vector<matchPosition> allMatches = m_genomeTrie.find(fragment.substr(0,m_minSearchLength), exactMatchOnly);
+	// Look for a match of the rest of the fragement, perhaps recursively calling findGenomesWithThisDNA on the rest of the string
+
+	// Return false if there were no matches found
+	if (allMatches.size() == 0)
+		return false;
+
+	// Temporarily print out all the matches
+	cout << "Matches Found:" << endl;
+	for (auto p = allMatches.begin(); p != allMatches.end(); p++)
+	{
+		cout << "Genome " << p->m_genomeNumber << " Position " << p->m_position << endl;
+	}
+
+	return true;
 }
 
 bool GenomeMatcherImpl::findRelatedGenomes(const Genome& query, int fragmentMatchLength, bool exactMatchOnly, double matchPercentThreshold, vector<GenomeMatch>& results) const
