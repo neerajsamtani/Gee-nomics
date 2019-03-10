@@ -84,6 +84,10 @@ void testTrie()
 	trie.insert("hit", 1);
 	trie.insert("hit", 2);
 	trie.insert("hi", 9);
+	trie.reset();
+	trie.insert("hit", 1);
+	trie.insert("hit", 2);
+	trie.insert("hi", 9);
 	trie.insert("hi", 17);
 	trie.insert("hip", 10);
 	trie.insert("hip", 20);
@@ -96,10 +100,13 @@ void testTrie()
 	trie.insert("tap", 19);
 	trie.insert("tap", 6);
 	trie.insert("tap", 32);
-	trie.reset();
-	trie.insert("hit", 1);
-	trie.insert("hit", 2);
-	trie.insert("hi", 9);
+
+	vector<int> result = trie.find("tap", true);
+
+	for (vector<int>::iterator p = result.begin();
+		p != result.end(); p++)
+		cout << (*p) << " " << endl;
+
 }
 
 int main()

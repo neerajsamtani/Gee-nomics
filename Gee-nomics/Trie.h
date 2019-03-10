@@ -7,8 +7,6 @@
 // TODO: remove iostream
 using namespace std;
 
-//TODO: REMOVE
-template<typename T> struct TD;
 
 template<typename ValueType>
 class Trie
@@ -41,6 +39,7 @@ private:
 	void print(Node* currentNode);
 	void cleanUp(Node* p);
 	void insertHelper(const std::string& key, const ValueType& value, Node* currentNode);
+	std::vector<ValueType> findHelper(const std::string& key, bool exactMatchOnly, Node* currentNode) const;
 	// DOUBT: Should I pass Node pointer by constant reference?
 };
 
@@ -129,8 +128,6 @@ inline void Trie<ValueType>::insertHelper(const std::string & key, const ValueTy
 	for (typename vector<ChildPtr>::iterator p = currentNode->m_children.begin();
 		p != currentNode->m_children.end(); p++)
 	{
-		// TODO: Remove the line below
-		//TD<decltype(p)> td;
 		if (p->m_label == currentChar)
 		{
 			foundCurrentChar = true;
@@ -168,7 +165,61 @@ inline void Trie<ValueType>::insertHelper(const std::string & key, const ValueTy
 template<typename ValueType>
 inline std::vector<ValueType> Trie<ValueType>::find(const std::string & key, bool exactMatchOnly) const
 {
-	return std::vector<ValueType>();
+	// Base Case: Empty Key
+	if (key.length() == 0)
+		return std::vector<ValueType>();
+	// TODO: if key length is one, return the values
+	// TODO: Look for first match
+	return findHelper(key, exactMatchOnly, m_root);
+}
+
+template<typename ValueType>
+inline std::vector<ValueType> Trie<ValueType>::findHelper(const std::string & key, bool exactMatchOnly, Node * currentNode) const
+{
+	// Base Case: Empty Key
+	if (key.length() == 0)
+		return currentNode->m_values;
+
+	char currentChar = key[0];
+	bool foundCurrentChar = false;
+
+	// Loop through the current node's children to find a matching label
+	for (typename vector<ChildPtr>::iterator p = currentNode->m_children.begin();
+		p != currentNode->m_children.end(); p++)
+	{
+		if (p->m_label == currentChar)
+		{
+			cout << p->m_label << endl;
+			foundCurrentChar = true;
+			// Special Case : string key has only one character
+			if (key.length() == 1)
+				return p->m_child->m_values;
+			// Otherwise if key has more than one value
+			else
+				return findHelper(key.substr(1), exactMatchOnly, p->m_child);
+		}
+	}
+	// If there is no child with a matching label and we are looking for
+	// exactMatchOnly, return an empty vector
+	if (!foundCurrentChar && exactMatchOnly)
+		return std::vector<ValueType>();
+	// If there is no child with a matching label and we are NOT looking for
+	// exactMatchOnly, look for a snip of the genome
+	// if (!foundCurrentChar && !exactMatchOnly)
+	else
+	{
+		exactMatchOnly = true;
+		vector<ValueType> returnVector;
+		// Loop through the current node's children to find a matching label
+		for (typename vector<ChildPtr>::iterator p = currentNode->m_children.begin();
+			p != currentNode->m_children.end(); p++)
+		{
+			vector<ValueType> result = findHelper(key.substr(1), exactMatchOnly, p->m_child);
+			if (!result.empty())
+				returnVector = result;
+		}
+		return returnVector;
+	}
 }
 
 #endif // TRIE_INCLUDED
