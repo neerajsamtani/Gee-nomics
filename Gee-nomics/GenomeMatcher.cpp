@@ -42,6 +42,7 @@ void GenomeMatcherImpl::addGenome(const Genome& genome)
 		matchPos.m_position = i;
 		m_genomeTrie.insert(fragment, matchPos);
 		cout << "Genome " << matchPos.m_genomeNumber << " Position " << matchPos.m_position << endl;
+		// TODO: REMOVE COUT
 	}
 }
 
