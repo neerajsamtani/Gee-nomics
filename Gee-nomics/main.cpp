@@ -101,11 +101,11 @@ void testTrie()
 	trie.insert("tap", 6);
 	trie.insert("tap", 32);
 
-	vector<int> result = trie.find("tap", true);
-
+	vector<int> result = trie.find("top", false);
 	for (vector<int>::iterator p = result.begin();
 		p != result.end(); p++)
-		cout << (*p) << " " << endl;
+		cout << (*p) << " ";
+	cout << endl;
 
 }
 

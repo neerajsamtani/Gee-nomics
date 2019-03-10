@@ -189,7 +189,6 @@ inline std::vector<ValueType> Trie<ValueType>::findHelper(const std::string & ke
 	{
 		if (p->m_label == currentChar)
 		{
-			cout << p->m_label << endl;
 			foundCurrentChar = true;
 			// Special Case : string key has only one character
 			if (key.length() == 1)
