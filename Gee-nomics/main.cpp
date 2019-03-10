@@ -81,10 +81,25 @@ void testGenome()
 void testTrie()
 {
 	Trie<int> trie;
-	trie.insert("Hi", 2);
-	trie.insert("Hello", 5);
-	trie.insert("Hell", 4);
-	trie.insert("Hell", 3);
+	trie.insert("hit", 1);
+	trie.insert("hit", 2);
+	trie.insert("hi", 9);
+	trie.insert("hi", 17);
+	trie.insert("hip", 10);
+	trie.insert("hip", 20);
+	trie.insert("hat", 7);
+	trie.insert("hat", 8);
+	trie.insert("hat", 9);
+	trie.insert("a", 14);
+	trie.insert("to", 22);
+	trie.insert("to", 23);
+	trie.insert("tap", 19);
+	trie.insert("tap", 6);
+	trie.insert("tap", 32);
+	trie.reset();
+	trie.insert("hit", 1);
+	trie.insert("hit", 2);
+	trie.insert("hi", 9);
 }
 
 int main()

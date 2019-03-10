@@ -39,7 +39,7 @@ private:
 
 	void createEmpty();
 	void print(Node* currentNode);
-	void cleanUp();
+	void cleanUp(Node* p);
 	void insertHelper(const std::string& key, const ValueType& value, Node* currentNode);
 	// DOUBT: Should I pass Node pointer by constant reference?
 };
@@ -58,7 +58,7 @@ inline void Trie<ValueType>::print(Node* currentNode)
 	cout << "Values :";
 	for (typename vector<ValueType>::iterator p = currentNode->m_values.begin();
 		p != currentNode->m_values.end(); p++)
-		cout << *p;
+		cout << *p << " ";
 	cout << endl << "Children: ";
 	for (typename vector<ChildPtr>::iterator p = currentNode->m_children.begin();
 		p != currentNode->m_children.end(); p++)
@@ -69,9 +69,22 @@ inline void Trie<ValueType>::print(Node* currentNode)
 }
 
 template<typename ValueType>
-inline void Trie<ValueType>::cleanUp()
+inline void Trie<ValueType>::cleanUp(Node* p)
 {
-	// delete all nodes
+	if (p != nullptr)
+	{
+		// Dont need to delete all the values
+		// They are integers and are deleted automatically
+
+		// Clean up all the Node's children
+		// then delete the node
+		for (typename vector<ChildPtr>::iterator currentChildPtr = p->m_children.begin();
+			currentChildPtr != p->m_children.end(); currentChildPtr++)
+		{
+			cleanUp((*currentChildPtr).m_child);
+		}
+		delete p;
+	}
 }
 
 template<typename ValueType>
@@ -83,14 +96,15 @@ inline Trie<ValueType>::Trie()
 template<typename ValueType>
 inline Trie<ValueType>::~Trie()
 {
+	// TODO: REMOVE PRINT STEP
 	print(m_root);
-	cleanUp();
+	cleanUp(m_root);
 }
 
 template<typename ValueType>
 inline void Trie<ValueType>::reset()
 {
-	cleanUp();
+	cleanUp(m_root);
 	createEmpty();
 }
 
@@ -99,7 +113,6 @@ inline void Trie<ValueType>::insert(const std::string & key, const ValueType & v
 {
 	insertHelper(key, value, m_root);
 }
-
 
 template<typename ValueType>
 inline void Trie<ValueType>::insertHelper(const std::string & key, const ValueType & value, Node* currentNode)
