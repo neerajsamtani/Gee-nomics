@@ -80,11 +80,14 @@ void testGenome()
 
 void testTrie()
 {
+	// Constructor
 	Trie<int> trie;
 	trie.insert("hit", 1);
 	trie.insert("hit", 2);
 	trie.insert("hi", 9);
+	// reset()
 	trie.reset();
+	// insert()
 	trie.insert("hit", 1);
 	trie.insert("hit", 2);
 	trie.insert("hi", 9);
@@ -101,11 +104,53 @@ void testTrie()
 	trie.insert("tap", 6);
 	trie.insert("tap", 32);
 
-	vector<int> result = trie.find("top", false);
-	for (vector<int>::iterator p = result.begin();
-		p != result.end(); p++)
-		cout << (*p) << " ";
-	cout << endl;
+	// find(exactMatchOnly = true)
+	string text;
+	text = "hit";
+	vector<int> result = trie.find(text, true);
+	assert(result[0] == 1 && result[1] == 2 );
+	text = "hi";
+	result = trie.find(text, true);
+	assert(result[0] == 9 && result[1] == 17);
+	text = "hip";
+	result = trie.find(text, true);
+	assert(result[0] == 10 && result[1] == 20);
+	text = "hat";
+	result = trie.find(text, true);
+	assert(result[0] == 7 && result[1] == 8 && result[2] == 9);
+	text = "a";
+	result = trie.find(text, true);
+	assert(result[0] == 14);
+	text = "to";
+	result = trie.find(text, true);
+	assert(result[0] == 22 && result[1] == 23);
+	text = "tap";
+	result = trie.find(text, true);
+	assert(result[0] == 19 && result[1] == 6 && result[2] == 32);
+
+	//find(exactMatchOnly = false)
+	text = "hit";
+	result = trie.find(text, false);
+	assert(result[0] == 1 && 
+			result[1] == 2 && 
+			result[2] == 10 &&
+			result[3] == 20 &&
+			result[4] == 7 &&
+			result[5] == 8 &&
+			result[6] == 9);
+	text = "sit";
+	result = trie.find(text, false);
+	assert(result.size() == 0);
+	text = "hft";
+	result = trie.find(text, false);
+	assert(result[0] == 1 &&
+		result[1] == 2 &&
+		result[2] == 7 &&
+		result[3] == 8 &&
+		result[4] == 9);
+	text = "a";
+	result = trie.find(text, false);
+	assert(result[0] == 14 && result.size() == 1);
 
 }
 
