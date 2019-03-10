@@ -38,15 +38,34 @@ private:
 	Node* m_root;
 
 	void createEmpty();
+	void print(Node* currentNode);
 	void cleanUp();
 	void insertHelper(const std::string& key, const ValueType& value, Node* currentNode);
-	// Should I pass Node pointer by constant reference?
+	// DOUBT: Should I pass Node pointer by constant reference?
 };
+
+// DOUBT: When to use typename? Why is it needed in the loop below?
 
 template<typename ValueType>
 inline void Trie<ValueType>::createEmpty()
 {
 	m_root = new Node;
+}
+
+template<typename ValueType>
+inline void Trie<ValueType>::print(Node* currentNode)
+{
+	cout << "Values :";
+	for (typename vector<ValueType>::iterator p = currentNode->m_values.begin();
+		p != currentNode->m_values.end(); p++)
+		cout << *p;
+	cout << endl << "Children: ";
+	for (typename vector<ChildPtr>::iterator p = currentNode->m_children.begin();
+		p != currentNode->m_children.end(); p++)
+	{
+		cout << (*p).m_label << endl;
+		print((*p).m_child);
+	}
 }
 
 template<typename ValueType>
@@ -64,6 +83,7 @@ inline Trie<ValueType>::Trie()
 template<typename ValueType>
 inline Trie<ValueType>::~Trie()
 {
+	print(m_root);
 	cleanUp();
 }
 
@@ -93,7 +113,7 @@ inline void Trie<ValueType>::insertHelper(const std::string & key, const ValueTy
 
 	// Loop through the current node's children to find a matching label
 	// vector<ChildPtr>::iterator
-	for (auto p = currentNode->m_children.begin();
+	for (typename vector<ChildPtr>::iterator p = currentNode->m_children.begin();
 		p != currentNode->m_children.end(); p++)
 	{
 		// TODO: Remove the line below

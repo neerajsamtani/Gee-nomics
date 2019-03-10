@@ -1,4 +1,5 @@
 #include "provided.h"
+#include "Trie.h"
 #include <iostream>
 #include <fstream>
 #include <cassert>
@@ -23,7 +24,8 @@ void testGenome()
 	// extract()
 	// Provided Tests
 	Genome g("oryx",
-		"GCTCGGNACACATCCGCCGCGGACGGGACGGGATTCGGGCTGTCGATTGTCTCACAGATCGTCGACGTACATGACTGGGA");	string	f1, f2, f3;
+		"GCTCGGNACACATCCGCCGCGGACGGGACGGGATTCGGGCTGTCGATTGTCTCACAGATCGTCGACGTACATGACTGGGA");
+	string	f1, f2, f3;
 	assert(g.extract(0, 5, f1) && f1 == "GCTCG");	 //	result1	=	true,	f1	=	“GCTCG”;
 	assert(g.extract(74, 6, f2) && f2 == "CTGGGA"); //	result2 =	true,	f2 =	“CTGGGA”;
 	assert(!g.extract(74, 7, f3)); //	result3 =	false,	f3 is	unchanged
@@ -69,15 +71,25 @@ void testGenome()
 	if (success)
 	{
 		cout << "Loaded	" << vg.size() << " genomes successfully:" << endl;
-		for (int k = 0; k != vg.size(); k++)
-			cout << vg[k].name() << endl;
+		//for (int k = 0; k != vg.size(); k++)
+		//	cout << vg[k].name() << endl;
 	}
 	else
 		cout << "Error loading genome data" << endl;
 }
 
+void testTrie()
+{
+	Trie<int> trie;
+	trie.insert("Hi", 2);
+	trie.insert("Hello", 5);
+	trie.insert("Hell", 4);
+	trie.insert("Hell", 3);
+}
+
 int main()
 {
 	testGenome();
+	testTrie();
 	cout << "Passed all tests" << endl;
 }
