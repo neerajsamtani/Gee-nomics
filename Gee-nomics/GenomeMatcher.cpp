@@ -17,14 +17,9 @@ public:
     bool findGenomesWithThisDNA(const string& fragment, int minimumLength, bool exactMatchOnly, vector<DNAMatch>& matches) const;
     bool findRelatedGenomes(const Genome& query, int fragmentMatchLength, bool exactMatchOnly, double matchPercentThreshold, vector<GenomeMatch>& results) const;
 private:
-	struct matchPosition
-	{
-		int m_genomeNumber;
-		int m_position;
-	};
 	int m_minSearchLength;
 	vector<Genome> m_genomes;
-	Trie<matchPosition> m_genomeTrie;
+	Trie<DNAMatch> m_genomeTrie;
 };
 
 GenomeMatcherImpl::GenomeMatcherImpl(int minSearchLength)
@@ -37,12 +32,11 @@ void GenomeMatcherImpl::addGenome(const Genome& genome)
 	string fragment;
 	for (int i = 0; genome.extract(i, m_minSearchLength, fragment); i++)
 	{
-		matchPosition matchPos;
-		matchPos.m_genomeNumber = m_genomes.size();
-		matchPos.m_position = i;
-		m_genomeTrie.insert(fragment, matchPos);
-		cout << "Genome " << matchPos.m_genomeNumber << " Position " << matchPos.m_position << endl;
-		// TODO: REMOVE COUT
+		DNAMatch match;
+		match.genomeName = genome.name();
+		match.length = m_minSearchLength; // TODO: Should this be genome.length()
+		match.position = i;
+		m_genomeTrie.insert(fragment, match);
 	}
 }
 
@@ -61,18 +55,23 @@ bool GenomeMatcherImpl::findGenomesWithThisDNA(const string& fragment, int minim
 		return false;
 
 	// Attempt to find matches of length m_minSearchLength in the GenomeMatcher Trie
-	vector<matchPosition> allMatches = m_genomeTrie.find(fragment.substr(0,m_minSearchLength), exactMatchOnly);
+	vector<DNAMatch> allMatches = m_genomeTrie.find(fragment.substr(0,m_minSearchLength), exactMatchOnly);
 	// Look for a match of the rest of the fragement, perhaps recursively calling findGenomesWithThisDNA on the rest of the string
 
 	// Return false if there were no matches found
 	if (allMatches.size() == 0)
 		return false;
 
+	// TODO: Only keep the longest match from one genome
+	matches = allMatches;
+
 	// Temporarily print out all the matches
-	cout << "Matches Found:" << endl;
+	// TODO: REMOVE
+	cout << endl << "Matches Found for " << fragment << ":"<< endl;
+	
 	for (auto p = allMatches.begin(); p != allMatches.end(); p++)
 	{
-		cout << "Genome " << p->m_genomeNumber << " Position " << p->m_position << endl;
+		cout << p->genomeName << " of length " << p->length << " at position " << p->position << endl;
 	}
 
 	return true;

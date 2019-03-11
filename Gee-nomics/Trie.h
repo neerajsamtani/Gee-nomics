@@ -96,7 +96,7 @@ template<typename ValueType>
 inline Trie<ValueType>::~Trie()
 {
 	// TODO: REMOVE PRINT STEP
-	print(m_root);
+	//print(m_root);
 	cleanUp(m_root);
 }
 
