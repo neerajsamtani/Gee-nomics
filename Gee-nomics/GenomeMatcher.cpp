@@ -50,9 +50,6 @@ bool GenomeMatcherImpl::findGenomesWithThisDNA(const string& fragment, int minim
 	// empty the matches vector
 	matches.clear();
 
-	// TODO: REMOVE
-	cout << endl << "Matches Found for " << fragment << " of minimum search length " << minimumLength << ":" << endl;
-
 	// Return false if
 	// fragment's length is less than minimumLength, or
 	// minimumLength is less than the m_minSearchLength
@@ -62,12 +59,8 @@ bool GenomeMatcherImpl::findGenomesWithThisDNA(const string& fragment, int minim
 
 	// Attempt to find matches of length m_minSearchLength in the GenomeMatcher Trie
 	vector<DNAMatch> potentialMatches = m_genomeTrie.find(fragment.substr(0,m_minSearchLength), exactMatchOnly);
-	
-	// Return false if there were no matches found
-	if (potentialMatches.size() == 0)
-		return false;
 
-	// TODO: Make efficient
+	// TODO: Make more efficient
 
 	// Look for a match of the rest of the fragement
 	// Loop through all the potential matches
@@ -103,32 +96,58 @@ bool GenomeMatcherImpl::findGenomesWithThisDNA(const string& fragment, int minim
 					// If a long enough match was found, add it to the match vector
 					if (lengthOfMatch >= minimumLength)
 					{
-						
-						cout << "Fragment         :" << fragment << endl;
-						cout << "TempStr          :"<< tempString << endl;
-						cout << "Mismatches Found :" << mismatchesFound << endl;
-						cout << "Length of Match  :" << lengthOfMatch << endl;
-						cout << endl;
-						DNAMatch match;
-						match.genomeName = p->genomeName;
-						match.length = lengthOfMatch;
-						//cout << fragment.length();
-						match.position = p->position;
-						matches.push_back(match);
+						// Check if the matches vector already has a match from the same genome
+						bool containsLongerMatchFromGenome = false;
+						auto matchIterator = matches.begin();
+						while ( matchIterator != matches.end())
+						{
+							if (matchIterator->genomeName == p->genomeName)
+							{
+								// delete the shorter match from the same genome
+								if (matchIterator->length < lengthOfMatch)
+								{
+									auto q = matches.erase(matchIterator);
+									matchIterator = q;
+								}
+								else
+								{
+									containsLongerMatchFromGenome = true;
+									matchIterator++;
+								}
+							}
+							else
+								matchIterator++;
+						}
+						if (!containsLongerMatchFromGenome)
+						{
+							DNAMatch match;
+							match.genomeName = p->genomeName;
+							match.length = lengthOfMatch;
+							match.position = p->position;
+							matches.push_back(match);
+						}
 					}
 				}
 			}
 		}
 	}
 
+	/*
+	// TODO: REMOVE
 	// Temporarily print out all the matches
-	// TODO: Remove
+	cout << endl << "Matches Found for " << fragment << " of minimum search length " << minimumLength << ":" << endl;
 	for (auto p = matches.begin(); p != matches.end(); p++)
 	{
 		cout << p->genomeName << " of length " << p->length << " at position " << p->position << endl;
 	}
+	*/
 
-	return true;
+
+	// Return false if there were no matches found
+	if (matches.size() == 0)
+		return false;
+	else
+		return true;
 }
 
 bool GenomeMatcherImpl::findRelatedGenomes(const Genome& query, int fragmentMatchLength, bool exactMatchOnly, double matchPercentThreshold, vector<GenomeMatch>& results) const

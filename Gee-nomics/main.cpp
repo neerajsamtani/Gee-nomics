@@ -59,7 +59,7 @@ void testGenome()
 	assert(!GenomeEmpty.extract(0, 1, fragment) && fragment.length() == 1);
 
 	// load()
-	string filename = "c:/genomes/Test_Genomes.txt";
+	string filename = "c:/genomes/Desulfurococcus_mucosus.txt";
 	ifstream strm(filename);
 	if (!strm)
 	{
@@ -159,8 +159,6 @@ void testTrie()
 
 void testGenomeMatcher()
 {
-	// create a break in CMD
-	cout << endl << "####################################" << endl;
 
 	// create Genomes
 	Genome GenomeOne("Genome 1", "CGGTGTACNACGACTGGGGATAGAATATCTTGACGTCGTACCGGTTGTAGTCGTTCGACCGAAGGGTTCCGCGCCAGTAC");
@@ -178,67 +176,54 @@ void testGenomeMatcher()
 	vector<DNAMatch> matches;
 	bool result;
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAAG", 4, true, matches);
-	//assert(result && matches[0].genomeName == "Genome 1" && matches[0].length == 4 && matches[0].position == 60);
-	//assert(result && matches[1].genomeName == "Genome 2" && matches[1].length == 4 && matches[1].position == 54);
-	//assert(result && matches[2].genomeName == "Genome 3" && matches[2].length == 4 && matches[2].position == 29);
+	assert(result && matches[0].genomeName == "Genome 1" && matches[0].length == 4 && matches[0].position == 60);
+	assert(result && matches[1].genomeName == "Genome 2" && matches[1].length == 4 && matches[1].position == 54);
+	assert(result && matches[2].genomeName == "Genome 3" && matches[2].length == 4 && matches[2].position == 29);
 	
 	result	= GenomeMatcherOne.findGenomesWithThisDNA("GAATAC",	4,	true,	matches);
-	//assert(result && matches[0].genomeName == "Genome 1" && matches[0].length == 5 && matches[0].position == 22);
-	//assert(result && matches[1].genomeName == "Genome 2" && matches[1].length == 5 && matches[1].position == 48);
+	assert(result && matches[0].genomeName == "Genome 1" && matches[0].length == 5 && matches[0].position == 22);
+	assert(result && matches[1].genomeName == "Genome 2" && matches[1].length == 5 && matches[1].position == 48);
 
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAATAC", 6, true, matches);
-	//assert(!result);
+	assert(!result && matches.size() == 0);
 
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAATAC", 6, false, matches);
-	//result: true; matches:
-	//Genome 1 of length 6 at position 22
-	//Genome 2 of length 6 at position 48
+	assert(result && matches[0].genomeName == "Genome 1" && matches[0].length == 6 && matches[0].position == 22);
+	assert(result && matches[1].genomeName == "Genome 2" && matches[1].length == 6 && matches[1].position == 48);
 	
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GTATAT", 6, false, matches);
-	//result: true; matches:
-	//Genome 1 of length 6 at position 22
-	//Genome 2 of length 6 at position 48
+	assert(result && matches[0].genomeName == "Genome 1" && matches[0].length == 6 && matches[0].position == 22);
+	assert(result && matches[1].genomeName == "Genome 2" && matches[1].length == 6 && matches[1].position == 48);
 	
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAATACG", 6, false, matches);
-	//result: true; matches:
-	//Genome 1 of length 6 at position 22
-	//Genome 2 of length 7 at position 48
+	assert(result && matches[0].genomeName == "Genome 1" && matches[0].length == 6 && matches[0].position == 22);
+	assert(result && matches[1].genomeName == "Genome 2" && matches[1].length == 7 && matches[1].position == 48);
 	
-	/*
-	matches.clear();
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAAGGGTT", 5, false, matches);
-	//result: true; matches:
-	//Genome 1 of length 8 at position 60
-	//Genome 3 of length 7 at position 35
-	//Genome 2 of length 5 at position 54
+	assert(result && matches[0].genomeName == "Genome 1" && matches[0].length == 8 && matches[0].position == 60);
+	assert(result && matches[1].genomeName == "Genome 2" && matches[1].length == 5 && matches[1].position == 54);
+	assert(result && matches[2].genomeName == "Genome 3" && matches[2].length == 7 && matches[2].position == 35);
 	
-	matches.clear();
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAAGGGTT", 6, false, matches);
-	//result: true; matches:
-	//Genome 1 of length 8 at position 60
-	//Genome 3 of length 7 at position 35
-		
-	matches.clear();
-	result = GenomeMatcherOne.findGenomesWithThisDNA("ACGTGCGAGACTTAGAGCC", 12, false, matches);
-	//result: true; matches:
-	//Genome 2 of length 19 at position 28
-		
-	matches.clear();
-	result = GenomeMatcherOne.findGenomesWithThisDNA("ACGTGCGAGACTTAGAGCG", 12, false, matches);
-	//result : true; matches:
-	//Genome 2 of length 19 at position 28
+	assert(result && matches[0].genomeName == "Genome 1" && matches[0].length == 8 && matches[0].position == 60);
+	assert(result && matches[1].genomeName == "Genome 3" && matches[1].length == 7 && matches[1].position == 35);
 
-	matches.clear();
+		
+	result = GenomeMatcherOne.findGenomesWithThisDNA("ACGTGCGAGACTTAGAGCC", 12, false, matches);
+	assert(result && matches[0].genomeName == "Genome 2" && matches[0].length == 19 && matches[0].position == 28);
+		
+	result = GenomeMatcherOne.findGenomesWithThisDNA("ACGTGCGAGACTTAGAGCG", 12, false, matches);
+	assert(result && matches[0].genomeName == "Genome 2" && matches[0].length == 19 && matches[0].position == 28);
+
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAAG", 3, true, matches);
-	//result: false; matches: none
+	assert(!result && matches.size() == 0);
 	
-	matches.clear();
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAAG", 5, true, matches);
-	//result: false; matches: none
-	*/
+	assert(!result && matches.size() == 0);
 	
 }
 
+/*
 int main()
 {
 	testGenome();
@@ -246,3 +231,4 @@ int main()
 	testGenomeMatcher();
 	cout << "Passed all tests" << endl;
 }
+*/
