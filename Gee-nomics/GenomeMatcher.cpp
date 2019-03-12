@@ -80,28 +80,35 @@ bool GenomeMatcherImpl::findGenomesWithThisDNA(const string& fragment, int minim
 			if (p->genomeName == m_genomes[i].name())
 			{
 				string tempString;
-				int mismatchesFound = 0;
+				// Check if the user requested an exact match
+				int mismatchesFound;
+				if (exactMatchOnly)
+					mismatchesFound = 1;
+				else
+					mismatchesFound = 0;
 				// extract the rest of the string into tempString
 				if (m_genomes[i].extract(p->position, fragment.length(), tempString))
 				{
 					// Compare each character
 					int lengthOfMatch = 0;
-					while (lengthOfMatch < tempString.length() && mismatchesFound < 2)
+					for ( ; lengthOfMatch < tempString.length() && mismatchesFound < 2; lengthOfMatch++)
 					{
-						if (fragment[i] != tempString[i])
-						{
+						if (fragment[lengthOfMatch] != tempString[lengthOfMatch])
 							mismatchesFound++;
-							lengthOfMatch++;
-						}
-						else 
-							lengthOfMatch++;
 					}
-					if (lengthOfMatch >= minimumLength && mismatchesFound < 2)
+					// If the loop broke because of too many mismatches
+					// decrease the length of the match by one
+					if (mismatchesFound >= 2)
+						lengthOfMatch--;
+					// If a long enough match was found, add it to the match vector
+					if (lengthOfMatch >= minimumLength)
 					{
-						cout << "Fragment		  :" << fragment << endl;
-						cout << "TempStr		  :"<< tempString << endl;
+						
+						cout << "Fragment         :" << fragment << endl;
+						cout << "TempStr          :"<< tempString << endl;
 						cout << "Mismatches Found :" << mismatchesFound << endl;
 						cout << "Length of Match  :" << lengthOfMatch << endl;
+						cout << endl;
 						DNAMatch match;
 						match.genomeName = p->genomeName;
 						match.length = lengthOfMatch;
