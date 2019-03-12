@@ -58,24 +58,8 @@ void testGenome()
 	// extract from empty Genome
 	assert(!GenomeEmpty.extract(0, 1, fragment) && fragment.length() == 1);
 
-	// load()
-	string filename = "c:/genomes/Desulfurococcus_mucosus.txt";
-	ifstream strm(filename);
-	if (!strm)
-	{
-		cout << "Cannot	open " << filename << endl;
-		return;
-	}
-	vector<Genome> vg;
-	bool success = Genome::load(strm, vg);
-	if (success)
-	{
-		cout << "Loaded	" << vg.size() << " genomes successfully:" << endl;
-		//for (int k = 0; k != vg.size(); k++)
-		//	cout << vg[k].name() << endl;
-	}
-	else
-		cout << "Error loading genome data" << endl;
+	// TODO: Add load test
+
 }
 
 void testTrie()
@@ -220,10 +204,51 @@ void testGenomeMatcher()
 	
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAAG", 5, true, matches);
 	assert(!result && matches.size() == 0);
-	
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	GenomeMatcher GenomeMatcherTwo(5);
+
+	const string PROVIDED_DIR = "c:/genomes";
+
+	const string providedFiles[] = {
+		"Ferroplasma_acidarmanus.txt",
+		"Halobacterium_jilantaiense.txt",
+		"Halorubrum_chaoviator.txt",
+		"Halorubrum_californiense.txt",
+		//"Halorientalis_regularis.txt",
+		//"Halorientalis_persicus.txt",
+		//"Ferroglobus_placidus.txt",
+		//"Desulfurococcus_mucosus.txt"
+	};
+
+	// load()
+	for (int i = 0; i < 4; i++)
+	{
+		string filename = PROVIDED_DIR + "/" + providedFiles[i];
+		ifstream strm(filename);
+		if (!strm)
+		{
+			cout << "Cannot	open " << filename << endl;
+			return;
+		}
+		vector<Genome> vg;
+		bool success = Genome::load(strm, vg);
+		if (success)
+		{
+			cout << "Loaded	" << vg.size() << " genomes successfully:" << endl;
+			//GenomeMatcherTwo.addGenome(vg);
+			for (const auto& g : vg)
+				GenomeMatcherOne.addGenome(g);
+		}
+		else
+			cout << "Error loading genome data" << endl;
+	}
+	result = GenomeMatcherOne.findGenomesWithThisDNA("GTGTGCAAA", 6, true, matches);
+	cout << "Matches found: " << matches.size() << endl;
 }
 
-/*
+
 int main()
 {
 	testGenome();
@@ -231,4 +256,3 @@ int main()
 	testGenomeMatcher();
 	cout << "Passed all tests" << endl;
 }
-*/

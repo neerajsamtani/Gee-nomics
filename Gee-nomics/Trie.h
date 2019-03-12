@@ -111,6 +111,7 @@ template<typename ValueType>
 inline void Trie<ValueType>::insert(const std::string & key, const ValueType & value)
 {
 	insertHelper(key, value, m_root);
+	// TODO: insertHelper probably has a bug
 }
 
 template<typename ValueType>
@@ -170,12 +171,16 @@ inline std::vector<ValueType> Trie<ValueType>::find(const std::string & key, boo
 		return std::vector<ValueType>();
 	
 	vector<ValueType> returnVector;
-
 	for (typename vector<ChildPtr>::iterator p = m_root->m_children.begin();
 		p != m_root->m_children.end(); p++)
 	{
 		if (p->m_label == key[0])
+		{
+			cout << "Call findHelper" << endl;
 			returnVector = findHelper(key.substr(1), exactMatchOnly, p->m_child);
+			cout << "findHelper returned" << endl;
+			break;
+		}
 	}
 	return returnVector;
 }
@@ -199,7 +204,7 @@ inline std::vector<ValueType> Trie<ValueType>::findHelper(const std::string & ke
 			tempResult = findHelper(key.substr(1), exactMatchOnly, p->m_child);
 			returnVector.insert(returnVector.end(), tempResult.begin(), tempResult.end());
 		}
-		else if(!exactMatchOnly)
+		else if (p->m_label != currentChar && !exactMatchOnly)
 		{
 			// if there was not a match, set exactMatchOnly to true and keep looking
 			tempResult = findHelper(key.substr(1), true, p->m_child);

@@ -49,7 +49,7 @@ bool GenomeMatcherImpl::findGenomesWithThisDNA(const string& fragment, int minim
 {
 	// empty the matches vector
 	matches.clear();
-
+	
 	// Return false if
 	// fragment's length is less than minimumLength, or
 	// minimumLength is less than the m_minSearchLength
