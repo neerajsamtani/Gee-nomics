@@ -212,18 +212,18 @@ void testGenomeMatcher()
 	const string PROVIDED_DIR = "c:/genomes";
 
 	const string providedFiles[] = {
-		"Ferroplasma_acidarmanus.txt",
+		//"Ferroplasma_acidarmanus.txt",
 		"Halobacterium_jilantaiense.txt",
-		"Halorubrum_chaoviator.txt",
+		//"Halorubrum_chaoviator.txt",
 		"Halorubrum_californiense.txt",
 		//"Halorientalis_regularis.txt",
-		//"Halorientalis_persicus.txt",
+		"Halorientalis_persicus.txt",
 		//"Ferroglobus_placidus.txt",
 		//"Desulfurococcus_mucosus.txt"
 	};
 
 	// load()
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		string filename = PROVIDED_DIR + "/" + providedFiles[i];
 		ifstream strm(filename);
@@ -244,8 +244,20 @@ void testGenomeMatcher()
 		else
 			cout << "Error loading genome data" << endl;
 	}
-	result = GenomeMatcherOne.findGenomesWithThisDNA("GTGTGCAAA", 6, true, matches);
+	result = GenomeMatcherOne.findGenomesWithThisDNA("GTGTGCAAA", 5, true, matches);
 	cout << "Matches found: " << matches.size() << endl;
+	result = GenomeMatcherOne.findGenomesWithThisDNA("GTGTGCAAA", 5, false, matches);
+	cout << "Matches found: " << matches.size() << endl;
+	result = GenomeMatcherOne.findGenomesWithThisDNA("GTGTGCAAAA", 10, true, matches);
+	cout << "Matches found: " << matches.size() << endl;
+	result = GenomeMatcherOne.findGenomesWithThisDNA("GTGTGCAAAA", 10, false, matches);
+	cout << "Matches found: " << matches.size() << endl;
+	result = GenomeMatcherOne.findGenomesWithThisDNA("ACGAATCACGTGCGAGA", 11, true, matches);
+	cout << "Matches found: " << matches.size() << endl;
+	for (auto p = matches.begin(); p != matches.end(); p++) 
+	{
+		cout << "length " << p->length << " position " << p->position << " in " << p->genomeName << endl;
+	}
 }
 
 
