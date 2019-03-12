@@ -198,36 +198,44 @@ void testGenomeMatcher()
 	//result: true; matches:
 	//Genome 1 of length 6 at position 22
 	//Genome 2 of length 6 at position 48
-		
+	
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAATACG", 6, false, matches);
 	//result: true; matches:
 	//Genome 1 of length 6 at position 22
 	//Genome 2 of length 7 at position 48
-		
+	
+	/*
+	matches.clear();
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAAGGGTT", 5, false, matches);
 	//result: true; matches:
 	//Genome 1 of length 8 at position 60
 	//Genome 3 of length 7 at position 35
 	//Genome 2 of length 5 at position 54
 	
+	matches.clear();
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAAGGGTT", 6, false, matches);
 	//result: true; matches:
 	//Genome 1 of length 8 at position 60
 	//Genome 3 of length 7 at position 35
 		
+	matches.clear();
 	result = GenomeMatcherOne.findGenomesWithThisDNA("ACGTGCGAGACTTAGAGCC", 12, false, matches);
 	//result: true; matches:
 	//Genome 2 of length 19 at position 28
 		
+	matches.clear();
 	result = GenomeMatcherOne.findGenomesWithThisDNA("ACGTGCGAGACTTAGAGCG", 12, false, matches);
 	//result : true; matches:
 	//Genome 2 of length 19 at position 28
 
+	matches.clear();
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAAG", 3, true, matches);
 	//result: false; matches: none
 	
+	matches.clear();
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAAG", 5, true, matches);
 	//result: false; matches: none
+	*/
 	
 }
 

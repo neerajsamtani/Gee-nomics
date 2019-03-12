@@ -34,7 +34,7 @@ void GenomeMatcherImpl::addGenome(const Genome& genome)
 	{
 		DNAMatch match;
 		match.genomeName = genome.name();
-		match.length = m_minSearchLength; // TODO: Should this be genome.length()
+		match.length = m_minSearchLength;
 		match.position = i;
 		m_genomeTrie.insert(fragment, match);
 	}
@@ -47,6 +47,12 @@ int GenomeMatcherImpl::minimumSearchLength() const
 
 bool GenomeMatcherImpl::findGenomesWithThisDNA(const string& fragment, int minimumLength, bool exactMatchOnly, vector<DNAMatch>& matches) const
 {
+	// empty the matches vector
+	matches.clear();
+
+	// TODO: REMOVE
+	cout << endl << "Matches Found for " << fragment << " of minimum search length " << minimumLength << ":" << endl;
+
 	// Return false if
 	// fragment's length is less than minimumLength, or
 	// minimumLength is less than the m_minSearchLength
@@ -55,21 +61,62 @@ bool GenomeMatcherImpl::findGenomesWithThisDNA(const string& fragment, int minim
 		return false;
 
 	// Attempt to find matches of length m_minSearchLength in the GenomeMatcher Trie
-	vector<DNAMatch> allMatches = m_genomeTrie.find(fragment.substr(0,m_minSearchLength), exactMatchOnly);
-	// Look for a match of the rest of the fragement, perhaps recursively calling findGenomesWithThisDNA on the rest of the string
-
+	vector<DNAMatch> potentialMatches = m_genomeTrie.find(fragment.substr(0,m_minSearchLength), exactMatchOnly);
+	
 	// Return false if there were no matches found
-	if (allMatches.size() == 0)
+	if (potentialMatches.size() == 0)
 		return false;
 
-	// TODO: Only keep the longest match from one genome
-	matches = allMatches;
+	// TODO: Make efficient
+
+	// Look for a match of the rest of the fragement
+	// Loop through all the potential matches
+	for (auto p = potentialMatches.begin(); p != potentialMatches.end(); p++)
+	{
+		// Loop through all the available genomes
+		for (int i = 0; i < m_genomes.size(); i++)
+		{
+			// If their names match
+			if (p->genomeName == m_genomes[i].name())
+			{
+				string tempString;
+				int mismatchesFound = 0;
+				// extract the rest of the string into tempString
+				if (m_genomes[i].extract(p->position, fragment.length(), tempString))
+				{
+					// Compare each character
+					int lengthOfMatch = 0;
+					while (lengthOfMatch < tempString.length() && mismatchesFound < 2)
+					{
+						if (fragment[i] != tempString[i])
+						{
+							mismatchesFound++;
+							lengthOfMatch++;
+						}
+						else 
+							lengthOfMatch++;
+					}
+					if (lengthOfMatch >= minimumLength && mismatchesFound < 2)
+					{
+						cout << "Fragment		  :" << fragment << endl;
+						cout << "TempStr		  :"<< tempString << endl;
+						cout << "Mismatches Found :" << mismatchesFound << endl;
+						cout << "Length of Match  :" << lengthOfMatch << endl;
+						DNAMatch match;
+						match.genomeName = p->genomeName;
+						match.length = lengthOfMatch;
+						//cout << fragment.length();
+						match.position = p->position;
+						matches.push_back(match);
+					}
+				}
+			}
+		}
+	}
 
 	// Temporarily print out all the matches
-	// TODO: REMOVE
-	cout << endl << "Matches Found for " << fragment << ":"<< endl;
-	
-	for (auto p = allMatches.begin(); p != allMatches.end(); p++)
+	// TODO: Remove
+	for (auto p = matches.begin(); p != matches.end(); p++)
 	{
 		cout << p->genomeName << " of length " << p->length << " at position " << p->position << endl;
 	}
