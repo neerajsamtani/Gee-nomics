@@ -176,9 +176,7 @@ inline std::vector<ValueType> Trie<ValueType>::find(const std::string & key, boo
 	{
 		if (p->m_label == key[0])
 		{
-			cout << "Call findHelper" << endl;
 			returnVector = findHelper(key.substr(1), exactMatchOnly, p->m_child);
-			cout << "findHelper returned" << endl;
 			break;
 		}
 	}

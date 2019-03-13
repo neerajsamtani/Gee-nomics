@@ -143,6 +143,10 @@ void testTrie()
 
 void testGenomeMatcher()
 {
+	vector<DNAMatch> matches;
+	bool result;
+
+	/*
 
 	// create Genomes
 	Genome GenomeOne("Genome 1", "CGGTGTACNACGACTGGGGATAGAATATCTTGACGTCGTACCGGTTGTAGTCGTTCGACCGAAGGGTTCCGCGCCAGTAC");
@@ -157,8 +161,6 @@ void testGenomeMatcher()
 	
 	
 	// findGenomesWithThisDNA()
-	vector<DNAMatch> matches;
-	bool result;
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAAG", 4, true, matches);
 	assert(result && matches[0].genomeName == "Genome 1" && matches[0].length == 4 && matches[0].position == 60);
 	assert(result && matches[1].genomeName == "Genome 2" && matches[1].length == 4 && matches[1].position == 54);
@@ -205,6 +207,8 @@ void testGenomeMatcher()
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAAG", 5, true, matches);
 	assert(!result && matches.size() == 0);
 
+	*/
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	GenomeMatcher GenomeMatcherTwo(5);
@@ -212,18 +216,18 @@ void testGenomeMatcher()
 	const string PROVIDED_DIR = "c:/genomes";
 
 	const string providedFiles[] = {
-		//"Ferroplasma_acidarmanus.txt",
+		"Ferroplasma_acidarmanus.txt",
 		"Halobacterium_jilantaiense.txt",
-		//"Halorubrum_chaoviator.txt",
+		"Halorubrum_chaoviator.txt",
 		"Halorubrum_californiense.txt",
-		//"Halorientalis_regularis.txt",
+		"Halorientalis_regularis.txt",
 		"Halorientalis_persicus.txt",
-		//"Ferroglobus_placidus.txt",
-		//"Desulfurococcus_mucosus.txt"
+		"Ferroglobus_placidus.txt",
+		"Desulfurococcus_mucosus.txt"
 	};
 
 	// load()
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 7; i++)
 	{
 		string filename = PROVIDED_DIR + "/" + providedFiles[i];
 		ifstream strm(filename);
@@ -239,20 +243,21 @@ void testGenomeMatcher()
 			cout << "Loaded	" << vg.size() << " genomes successfully:" << endl;
 			//GenomeMatcherTwo.addGenome(vg);
 			for (const auto& g : vg)
-				GenomeMatcherOne.addGenome(g);
+				GenomeMatcherTwo.addGenome(g);
 		}
 		else
 			cout << "Error loading genome data" << endl;
 	}
-	result = GenomeMatcherOne.findGenomesWithThisDNA("GTGTGCAAA", 5, true, matches);
+	
+	result = GenomeMatcherTwo.findGenomesWithThisDNA("GTGTGCAAA", 5, true, matches);
 	cout << "Matches found: " << matches.size() << endl;
-	result = GenomeMatcherOne.findGenomesWithThisDNA("GTGTGCAAA", 5, false, matches);
+	result = GenomeMatcherTwo.findGenomesWithThisDNA("GTGTGCAAA", 5, false, matches);
 	cout << "Matches found: " << matches.size() << endl;
-	result = GenomeMatcherOne.findGenomesWithThisDNA("GTGTGCAAAA", 10, true, matches);
+	result = GenomeMatcherTwo.findGenomesWithThisDNA("GTGTGCAAAA", 10, true, matches);
 	cout << "Matches found: " << matches.size() << endl;
-	result = GenomeMatcherOne.findGenomesWithThisDNA("GTGTGCAAAA", 10, false, matches);
+	result = GenomeMatcherTwo.findGenomesWithThisDNA("GTGTGCAAAA", 10, false, matches);
 	cout << "Matches found: " << matches.size() << endl;
-	result = GenomeMatcherOne.findGenomesWithThisDNA("ACGAATCACGTGCGAGA", 11, true, matches);
+	result = GenomeMatcherTwo.findGenomesWithThisDNA("ACGAATCACGTGCGAGA", 11, true, matches);
 	cout << "Matches found: " << matches.size() << endl;
 	for (auto p = matches.begin(); p != matches.end(); p++) 
 	{
