@@ -2,6 +2,8 @@
 #include "Trie.h"
 #include <string>
 #include <vector>
+#include <unordered_map>
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 using namespace std;
@@ -138,6 +140,52 @@ bool GenomeMatcherImpl::findGenomesWithThisDNA(const string& fragment, int minim
 
 bool GenomeMatcherImpl::findRelatedGenomes(const Genome& query, int fragmentMatchLength, bool exactMatchOnly, double matchPercentThreshold, vector<GenomeMatch>& results) const
 {
+	int lengthOfQuery = (query.name()).length();
+	if (fragmentMatchLength < m_minSearchLength || lengthOfQuery < fragmentMatchLength)
+		return false;
+
+	results.clear();
+	string fragment;
+	vector<DNAMatch> matches;
+	unordered_map<string, int> numOfGenomeMatches;
+	for (int i = 0; i < lengthOfQuery; i += fragmentMatchLength)
+	{
+		query.extract(i, fragmentMatchLength, fragment);
+		findGenomesWithThisDNA(fragment, fragmentMatchLength, exactMatchOnly, matches);
+		for (auto p = matches.begin(); p != matches.end(); p++)
+		{
+			// Copied from www.techiedelight.com/increment-map-value-associated-with-key-cpp/
+			// check if genomeName exists in the map or not
+			std::unordered_map<string, int>::iterator it = numOfGenomeMatches.find(p->genomeName);
+
+			// If the key was already present in the map
+			// increment map's value for genomeName
+			if (it != numOfGenomeMatches.end()) {
+				it->second++;
+			}
+			// Otherwise, the key was not found
+			// insert it into the unordered_map
+			else {
+				numOfGenomeMatches.insert(make_pair(p->genomeName, 1));
+			}
+		}
+	}
+	cout << "Number of Potential Genome Matches: " << numOfGenomeMatches.size() << endl;
+	double percent;
+	for (auto p = numOfGenomeMatches.begin(); p != numOfGenomeMatches.end(); p++)
+	{
+		percent = ((p->second) * 100) / (lengthOfQuery / fragmentMatchLength);
+		if (percent >= matchPercentThreshold)
+		{
+			int lengthOfQuery = (query.name()).length();
+			GenomeMatch matchingGenome;
+			matchingGenome.genomeName = p->first;
+			matchingGenome.percentMatch = percent;
+			results.push_back(matchingGenome);
+		}
+		// TODO: sort(results);
+	}
+	cout << "Number of Genome Matches which cross threshhold: " << results.size() << endl;
     return false;  // This compiles, but may not be correct
 }
 

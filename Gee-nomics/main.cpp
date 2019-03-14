@@ -146,8 +146,6 @@ void testGenomeMatcher()
 	vector<DNAMatch> matches;
 	bool result;
 
-	/*
-
 	// create Genomes
 	Genome GenomeOne("Genome 1", "CGGTGTACNACGACTGGGGATAGAATATCTTGACGTCGTACCGGTTGTAGTCGTTCGACCGAAGGGTTCCGCGCCAGTAC");
 	Genome GenomeTwo("Genome 2", "TAACAGAGCGGTNATATTGTTACGAATCACGTGCGAGACTTAGAGCCAGAATATGAAGTAGTGATTCAGCAACCAAGCGG");
@@ -207,7 +205,6 @@ void testGenomeMatcher()
 	result = GenomeMatcherOne.findGenomesWithThisDNA("GAAG", 5, true, matches);
 	assert(!result && matches.size() == 0);
 
-	*/
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -227,7 +224,7 @@ void testGenomeMatcher()
 	};
 
 	// load()
-	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		string filename = PROVIDED_DIR + "/" + providedFiles[i];
 		ifstream strm(filename);
@@ -263,13 +260,37 @@ void testGenomeMatcher()
 	{
 		cout << "length " << p->length << " position " << p->position << " in " << p->genomeName << endl;
 	}
+
+	// findRelatedGenomes
+
+	string filename = PROVIDED_DIR + "/" + providedFiles[0];
+	ifstream strm(filename);
+	if (!strm)
+	{
+		cout << "Cannot	open " << filename << endl;
+		return;
+	}
+	vector<Genome> vg;
+	bool success = Genome::load(strm, vg);
+	Genome testGenome("a","b");
+	if (success)
+	{
+		testGenome = vg[0];
+		cout << "Loaded	" << vg.size() << " genomes successfully:" << endl;
+		Genome testGenome = vg[0];
+	}
+	else
+		cout << "Error loading genome data" << endl;
+
+	vector<GenomeMatch> results;
+	result = GenomeMatcherTwo.findRelatedGenomes(testGenome, 10, true, 50, results);
 }
 
 
 int main()
 {
-	testGenome();
-	testTrie();
+	//testGenome();
+	//testTrie();
 	testGenomeMatcher();
 	cout << "Passed all tests" << endl;
 }
