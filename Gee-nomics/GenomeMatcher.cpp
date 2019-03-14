@@ -195,7 +195,6 @@ bool GenomeMatcherImpl::findRelatedGenomes(const Genome& query, int fragmentMatc
 		percent = ((p->second) * 100) / numberOfSequences;
 		if (percent >= matchPercentThreshold)
 		{
-			int lengthOfQuery = (query.name()).length();
 			GenomeMatch matchingGenome;
 			matchingGenome.genomeName = p->first;
 			matchingGenome.percentMatch = percent;

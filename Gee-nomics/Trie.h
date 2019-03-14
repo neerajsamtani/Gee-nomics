@@ -23,6 +23,7 @@ private:
 	struct Node;
 	struct ChildPtr
 	{
+		// TODO: Maybe convert to string?
 		char m_label;
 		Node* m_child;
 	};

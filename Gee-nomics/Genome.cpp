@@ -95,8 +95,8 @@ bool GenomeImpl::load(istream& genomeSource, vector<Genome>& genomes)
 	// by checking if name has a value but sequence is empty
 	// Error if there was a line starting with > but no other characters
 	// by checking if name is empty but sequence has a value
-	else if (name != "" && sequence == "" ||
-				name == "" && sequence != "")
+	else if ((name != "" && sequence == "") ||
+				(name == "" && sequence != ""))
 	{
 		return false;
 	}
