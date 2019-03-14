@@ -34,13 +34,13 @@ using namespace std;
 const string PROVIDED_DIR = "c:/genomes";
 
 const string providedFiles[] = {
-	//"Ferroplasma_acidarmanus.txt",
-	//"Halobacterium_jilantaiense.txt",
-	//"Halorubrum_chaoviator.txt",
+	"Ferroplasma_acidarmanus.txt",
+	"Halobacterium_jilantaiense.txt",
+	"Halorubrum_chaoviator.txt",
 	"Halorubrum_californiense.txt",
 	"Halorientalis_regularis.txt",
-	//"Halorientalis_persicus.txt",
-	//"Ferroglobus_placidus.txt",
+	"Halorientalis_persicus.txt",
+	"Ferroglobus_placidus.txt",
 	"Desulfurococcus_mucosus.txt"
 };
 
@@ -277,6 +277,7 @@ void showMenu()
 	cout << "         d - load all provided data files   ? - show this menu" << endl;
 	cout << "         e - find matches exactly           q - quit" << endl;
 }
+
 /*
 int main()
 {

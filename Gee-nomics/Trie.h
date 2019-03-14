@@ -3,8 +3,6 @@
 
 #include <string>
 #include <vector>
-#include <iostream>
-// TODO: remove iostream and print
 using namespace std;
 
 
@@ -36,14 +34,14 @@ private:
 	Node* m_root;
 
 	void createEmpty();
-	void print(Node* currentNode);
+	//void print(Node* currentNode); // Used for debugging purposes
 	void cleanUp(Node* p);
 	void insertHelper(const std::string& key, const ValueType& value, Node* currentNode);
 	std::vector<ValueType> findHelper(const std::string& key, bool exactMatchOnly, Node* currentNode) const;
 };
 
-// TODO:DOUBT: Should I pass Node pointer by constant reference?
-// TODO:DOUBT: When to use typename? Why is it needed in the loop below?
+// TODO: DOUBT: Should I pass Node pointer by constant reference?
+// TODO: DOUBT: When to use typename? Why is it needed in the loop below?
 
 template<typename ValueType>
 inline void Trie<ValueType>::createEmpty()
@@ -51,6 +49,7 @@ inline void Trie<ValueType>::createEmpty()
 	m_root = new Node;
 }
 
+/*
 template<typename ValueType>
 inline void Trie<ValueType>::print(Node* currentNode)
 {
@@ -66,6 +65,7 @@ inline void Trie<ValueType>::print(Node* currentNode)
 		print((*p).m_child);
 	}
 }
+*/
 
 template<typename ValueType>
 inline void Trie<ValueType>::cleanUp(Node* p)
@@ -95,8 +95,6 @@ inline Trie<ValueType>::Trie()
 template<typename ValueType>
 inline Trie<ValueType>::~Trie()
 {
-	// TODO: REMOVE PRINT STEP
-	//print(m_root);
 	cleanUp(m_root);
 }
 
@@ -111,7 +109,6 @@ template<typename ValueType>
 inline void Trie<ValueType>::insert(const std::string & key, const ValueType & value)
 {
 	insertHelper(key, value, m_root);
-	// TODO: insertHelper probably has a bug
 }
 
 template<typename ValueType>
@@ -125,7 +122,7 @@ inline void Trie<ValueType>::insertHelper(const std::string & key, const ValueTy
 	bool foundCurrentChar = false;
 
 	// Loop through the current node's children to find a matching label
-	// vector<ChildPtr>::iterator
+	// TODO: DOUBT: Why is typename here?
 	for (typename vector<ChildPtr>::iterator p = currentNode->m_children.begin();
 		p != currentNode->m_children.end(); p++)
 	{

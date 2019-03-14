@@ -8,7 +8,14 @@
 #include <fstream>
 using namespace std;
 
-// TODO: Destructor to destroy Trie
+// Sort GenomeMatch objects
+bool wayToSort(GenomeMatch a, GenomeMatch b)
+{
+	if (a.percentMatch != b.percentMatch)
+		return (a.percentMatch > b.percentMatch);
+	else
+		return (a.genomeName < b.genomeName);
+}
 
 class GenomeMatcherImpl
 {
@@ -119,6 +126,8 @@ bool GenomeMatcherImpl::findGenomesWithThisDNA(const string& fragment, int minim
 					else
 						matchIterator++;
 				}
+				// If there wasn't a shorter match in matches
+				// insert the current data
 				if (!containsLongerMatchFromGenome)
 				{
 					DNAMatch match;
@@ -140,18 +149,25 @@ bool GenomeMatcherImpl::findGenomesWithThisDNA(const string& fragment, int minim
 
 bool GenomeMatcherImpl::findRelatedGenomes(const Genome& query, int fragmentMatchLength, bool exactMatchOnly, double matchPercentThreshold, vector<GenomeMatch>& results) const
 {
-	int lengthOfQuery = (query.name()).length();
-	if (fragmentMatchLength < m_minSearchLength || lengthOfQuery < fragmentMatchLength)
+	// Check if the function call was invalid
+	if (fragmentMatchLength < m_minSearchLength)
 		return false;
 
+	// Clear the results vector
 	results.clear();
+	// Declare the variables needed
 	string fragment;
 	vector<DNAMatch> matches;
 	unordered_map<string, int> numOfGenomeMatches;
-	for (int i = 0; i < lengthOfQuery; i += fragmentMatchLength)
+	int i = 0;
+	int numberOfSequences = 0;
+
+	// Extract fragments from the Genome
+	while (query.extract(i, fragmentMatchLength, fragment))
 	{
-		query.extract(i, fragmentMatchLength, fragment);
+		// Check if other Genomes match the fragment
 		findGenomesWithThisDNA(fragment, fragmentMatchLength, exactMatchOnly, matches);
+		// Add the results to an unordered_map
 		for (auto p = matches.begin(); p != matches.end(); p++)
 		{
 			// Copied from www.techiedelight.com/increment-map-value-associated-with-key-cpp/
@@ -169,12 +185,15 @@ bool GenomeMatcherImpl::findRelatedGenomes(const Genome& query, int fragmentMatc
 				numOfGenomeMatches.insert(make_pair(p->genomeName, 1));
 			}
 		}
+		i += fragmentMatchLength;
+		numberOfSequences++;
 	}
-	cout << "Number of Potential Genome Matches: " << numOfGenomeMatches.size() << endl;
 	double percent;
+	// If the matches cross the treshhold
+	// add them to the results vector
 	for (auto p = numOfGenomeMatches.begin(); p != numOfGenomeMatches.end(); p++)
 	{
-		percent = ((p->second) * 100) / (lengthOfQuery / fragmentMatchLength);
+		percent = ((p->second) * 100) / numberOfSequences;
 		if (percent >= matchPercentThreshold)
 		{
 			int lengthOfQuery = (query.name()).length();
@@ -183,10 +202,14 @@ bool GenomeMatcherImpl::findRelatedGenomes(const Genome& query, int fragmentMatc
 			matchingGenome.percentMatch = percent;
 			results.push_back(matchingGenome);
 		}
-		// TODO: sort(results);
+		sort(results.begin(), results.end(), wayToSort);
 	}
-	cout << "Number of Genome Matches which cross threshhold: " << results.size() << endl;
-    return false;  // This compiles, but may not be correct
+
+	// Return false if there were no matches which crossed the threshhold.
+	if (results.size() > 0)
+		return true;
+	else
+		return false;
 }
 
 //******************** GenomeMatcher functions ********************************

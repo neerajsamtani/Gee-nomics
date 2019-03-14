@@ -263,34 +263,17 @@ void testGenomeMatcher()
 
 	// findRelatedGenomes
 
-	string filename = PROVIDED_DIR + "/" + providedFiles[0];
-	ifstream strm(filename);
-	if (!strm)
-	{
-		cout << "Cannot	open " << filename << endl;
-		return;
-	}
-	vector<Genome> vg;
-	bool success = Genome::load(strm, vg);
-	Genome testGenome("a","b");
-	if (success)
-	{
-		testGenome = vg[0];
-		cout << "Loaded	" << vg.size() << " genomes successfully:" << endl;
-		Genome testGenome = vg[0];
-	}
-	else
-		cout << "Error loading genome data" << endl;
-
+	Genome testGenome("Test Genome", "ATCCAAGACAGCGAGGACGGCGTCGACGTCGCCACGATTCTGGATCGGGCAATCGCCGACGAAC");
 	vector<GenomeMatch> results;
-	result = GenomeMatcherTwo.findRelatedGenomes(testGenome, 10, true, 50, results);
+	result = GenomeMatcherTwo.findRelatedGenomes(testGenome, 10, true, 95, results);
 }
 
 
 int main()
 {
-	//testGenome();
-	//testTrie();
+	testGenome();
+	testTrie();
 	testGenomeMatcher();
 	cout << "Passed all tests" << endl;
 }
+
