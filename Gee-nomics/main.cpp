@@ -58,8 +58,6 @@ void testGenome()
 	// extract from empty Genome
 	assert(!GenomeEmpty.extract(0, 1, fragment) && fragment.length() == 1);
 
-	// TODO: Add load test
-
 }
 
 void testTrie()

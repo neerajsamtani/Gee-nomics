@@ -73,7 +73,6 @@ bool GenomeMatcherImpl::findGenomesWithThisDNA(const string& fragment, int minim
 		return false;
 
 	// Attempt to find matches of length m_minSearchLength in the GenomeMatcher Trie
-	//vector<TrieNode> potentialMatches = m_genomeTrie.find(fragment.substr(0,m_minSearchLength), exactMatchOnly);
 	vector<TrieNode> potentialMatches = m_genomeTrie.find(fragment.substr(0, m_minSearchLength), exactMatchOnly);
 
 	// Look for a match of the rest of the fragement
